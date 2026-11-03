@@ -1,6 +1,8 @@
 from datetime import datetime
 
 from cities import CITIES
+from db import Session
+from get_data import ElancoAPIError, get_sightings
 from models import Sighting
 
 REQUIRED_FIELDS = ["id", "date", "location", "species", "latinName"]
@@ -53,3 +55,19 @@ def load_sightings(records, session):
 
     session.commit()
     return added
+
+
+# fetches the latest data ==> saves anything new
+def refresh_data():
+    records = get_sightings()
+
+    with Session() as session:
+        return load_sightings(records, session)
+
+
+if __name__ == "__main__":
+    try:
+        added = refresh_data()
+        print(f"Added {added} new sightings.")
+    except ElancoAPIError as error:
+        print(f"Could not refresh data: {error}")
