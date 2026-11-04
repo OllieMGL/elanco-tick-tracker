@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request
 
 from cities import CITIES
 from db import Session
+from get_data import ElancoAPIError
+from load_data import refresh_data
 from species import SPECIES
 from sightings import create_sighting, search_sightings, validate_report
 from stats import count_by_calendar_month, count_by_location, count_over_time
@@ -35,6 +37,13 @@ def get_date_range():
     if end:
         end = end.replace(hour=23, minute=59, second=59)  # include the whole end day
     return start, end
+
+def refresh_on_startup():
+    try:
+        added = refresh_data()
+        print(f"Elanco data refreshed: {added} new sightings.")
+    except ElancoAPIError as error:
+        print(f"Could not refresh Elanco data, using saved data instead: {error}")
 
 
 @app.route("/api/sightings", methods=["GET"])
@@ -143,6 +152,6 @@ def method_not_allowed(error):
 def server_error(error):
     return jsonify({"error": "Something went wrong. Please try again later."}), 500
 
-
 if __name__ == "__main__":
+    refresh_on_startup()
     app.run(debug=True)

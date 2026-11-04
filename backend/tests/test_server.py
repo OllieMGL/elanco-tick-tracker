@@ -1,3 +1,7 @@
+import server
+from get_data import ElancoAPIError
+
+
 def test_options_route_lists_cities_and_species(client):
     response = client.get("/api/options")
     body = response.get_json()
@@ -20,3 +24,14 @@ def test_wrong_method_returns_a_json_405(client):
 
     assert response.status_code == 405
     assert response.get_json() == {"error": "Method not allowed"}
+
+
+def test_startup_carries_on_when_elanco_is_down(monkeypatch, capsys):
+    def elanco_is_down():
+        raise ElancoAPIError("Elanco API unavailable after 3 attempts")
+
+    monkeypatch.setattr(server, "refresh_data", elanco_is_down)
+
+    server.refresh_on_startup()  # the test fails if this raises an error
+
+    assert "using saved data instead" in capsys.readouterr().out
