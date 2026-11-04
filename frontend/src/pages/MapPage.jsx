@@ -4,7 +4,7 @@ import SightingsMap from '../components/SightingsMap'
 
 function MapPage() {
   const [counts, setCounts] = useState({})  // sightings per city
-  const [cities, setCities] = useState({})  // each city's coordinates, e.g. {"London": {lat, lng}}
+  const [cities, setCities] = useState({})  // each city's coordinates
   const [serverError, setServerError] = useState(null)
 
   useEffect(() => {
@@ -23,11 +23,11 @@ function MapPage() {
   const totalSightings = Object.values(counts).reduce((total, count) => total + count, 0)
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Tick sightings map</h1>
-      {serverError && <p className="text-red-600">{serverError}</p>}
+    <div className="page">
+      <h1 className="page-title">Tick sightings map</h1>
+      {serverError && <p className="server-error">{serverError}</p>}
       <p>{totalSightings} sightings across {Object.keys(counts).length} cities</p>
-      <SightingsMap cities={cities} />
+      <SightingsMap cities={cities} counts={counts} />
     </div>
   )
 }
