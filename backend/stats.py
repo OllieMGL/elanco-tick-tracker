@@ -11,14 +11,16 @@ def count_by_location(session, start=None, end=None, species=None):
     return dict(Counter(sighting.location for sighting in sightings))
 
 
-# the month or week a date falls in
+# the year, month or week a date falls in
 def period_label(date, interval):
+    if interval == "year":
+        return date.strftime("%Y")  # just the year ==> 2024
     if interval == "week":
         return date.strftime("%G-W%V")  # year and week number ==> 2024-W23
     return date.strftime("%Y-%m")  # year and month ==>  2024-06
 
 
-# sightings per month or week 
+# sightings per year, month or week
 def count_over_time(session, interval="month", start=None, end=None, location=None, species=None):
     sightings = search_sightings(session, start=start, end=end, location=location, species=species)
     counts = Counter(period_label(sighting.date, interval) for sighting in sightings)

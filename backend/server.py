@@ -98,8 +98,8 @@ def stats_regions():
 @app.route("/api/stats/trends", methods=["GET"])
 def stats_trends():
     interval = request.args.get("interval", "month")  # month used as a fallback
-    if interval not in ("week", "month"):
-        return jsonify({"error": "interval must be week or month"}), 400
+    if interval not in ("week", "month", "year"):
+        return jsonify({"error": "interval must be week, month or year"}), 400
 
     try:
         start, end = get_date_range()
