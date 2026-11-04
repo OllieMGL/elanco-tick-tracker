@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+/* navbar */
+.navbar {
+  @apply flex items-center gap-6 bg-green-800 px-6 py-3 text-white;
+}
+
+.navbar-title {
+  @apply text-lg font-bold;
+}
+
+.nav-link {
+  @apply hover:underline;
+}
+
+/* NavLink adds the "active" class to the link for the page you're on */
+.nav-link.active {
+  @apply font-semibold underline;
+}
+
+/* every page */
+.page {
+  @apply p-6;
+}
+
+.page-title {
+  @apply text-2xl font-bold;
+}
+
+.server-error {
+  @apply text-red-600;
+}
+
+/* map page - the map needs a height or it won't show at all */
+.sightings-map {
+  @apply h-[70vh] w-full;
+}
+
+.map-key {
+  @apply mt-2 flex gap-4 text-sm;
+}
+
+.map-key-item {
+  @apply flex items-center gap-1;
+}
+
+.map-key-dot {
+  @apply inline-block h-3 w-3 rounded-full;
+}

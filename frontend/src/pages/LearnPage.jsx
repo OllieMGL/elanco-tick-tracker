@@ -1,5 +1,9 @@
 function LearnPage() {
-  return <h1 className="p-6 text-2xl font-bold">Learn about ticks</h1>
+  return (
+    <div className="page">
+      <h1 className="page-title">Learn about ticks</h1>
+    </div>
+  )
 }
 
 export default LearnPage
