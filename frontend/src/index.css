@@ -31,6 +31,16 @@
   @apply text-red-600;
 }
 
+/* map page filters - inputs need a border or Tailwind leaves them invisible */
+.map-filters {
+  @apply my-4 flex gap-6;
+}
+
+.map-filters select,
+.map-filters input {
+  @apply ml-2 border px-2 py-1;
+}
+
 /* map page - the map needs a height or it won't show at all */
 .sightings-map {
   @apply h-[70vh] w-full;
