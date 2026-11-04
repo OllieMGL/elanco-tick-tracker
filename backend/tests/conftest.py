@@ -2,19 +2,22 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+import server
 from models import Base
-from server import app
 
 
 @pytest.fixture
-def client():
+def client(session, monkeypatch):
+    # make routes use test db instead of real db
+    monkeypatch.setattr(server, "Session", sessionmaker(bind=session.get_bind()))
+
     # TESTING makes errors inside a route show up in the test instead of 500
-    app.config.update(TESTING=True)
-    return app.test_client()
+    server.app.config.update(TESTING=True)
+    return server.app.test_client()
 
 @pytest.fixture
 def session():
-    # empty in-memory database for every test
+    # empty in memory db for every test
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
 

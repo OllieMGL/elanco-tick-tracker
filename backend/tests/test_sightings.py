@@ -63,3 +63,30 @@ def test_sighting_to_dict(session):
         "latin_name": "Ixodes apronophorus",
         "source": "elanco",
     }
+
+
+def test_sightings_route_returns_filtered_json(client, session):
+    add_sighting(session, location="London")
+    add_sighting(session, location="Leeds")
+
+    response = client.get("/api/sightings?location=Leeds")
+
+    assert response.status_code == 200
+    body = response.get_json()
+    assert len(body) == 1
+    assert body[0]["location"] == "Leeds"
+
+
+def test_sightings_route_includes_the_whole_end_day(client, session):
+    add_sighting(session, date=datetime(2024, 6, 30, 14, 15))  # afternoon of the end day
+
+    response = client.get("/api/sightings?end=2024-06-30")
+
+    assert len(response.get_json()) == 1
+
+
+def test_sightings_route_rejects_a_bad_date(client):
+    response = client.get("/api/sightings?start=banana")
+
+    assert response.status_code == 400
+    assert "error" in response.get_json()
