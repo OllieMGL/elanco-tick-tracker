@@ -2,7 +2,9 @@ from datetime import datetime
 
 from flask import Flask, jsonify, request
 
+from cities import CITIES
 from db import Session
+from species import SPECIES
 from sightings import create_sighting, search_sightings, validate_report
 from stats import count_by_calendar_month, count_by_location, count_over_time
 
@@ -115,6 +117,31 @@ def stats_seasonal():
             species=request.args.get("species"),
         )
         return jsonify(months)
+
+
+# passes the tick types and possible cities to frontend
+@app.route("/api/options", methods=["GET"])
+def options():
+    return jsonify({
+        "cities": CITIES,
+        "species": list(SPECIES),
+    })
+
+
+# ERROR HANDLERS ==> FLask can send back a json error response
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found"}), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+    return jsonify({"error": "Method not allowed"}), 405
+
+
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({"error": "Something went wrong. Please try again later."}), 500
 
 
 if __name__ == "__main__":
