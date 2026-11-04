@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, jsonify, request
 
 from db import Session
-from sightings import search_sightings
+from sightings import create_sighting, search_sightings, validate_report
 
 app = Flask(__name__)
 
@@ -45,6 +45,21 @@ def list_sightings():
             species=request.args.get("species"),
         )
         return jsonify([sighting_to_dict(sighting) for sighting in sightings])
+
+
+@app.route("/api/sightings", methods=["POST"])
+def report_sighting():
+    data = request.get_json(silent=True)  # None if the body isn't valid JSON
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object"}), 400
+
+    errors = validate_report(data)
+    if errors:
+        return jsonify({"errors": errors}), 400
+
+    with Session() as session:
+        sighting = create_sighting(session, data)
+        return jsonify(sighting_to_dict(sighting)), 201
 
 
 if __name__ == "__main__":

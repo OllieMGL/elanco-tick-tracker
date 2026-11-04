@@ -49,3 +49,17 @@ def validate_report(data):
         errors["species"] = "Species must be one of the listed species"
 
     return errors
+
+
+# saves a report as a new sighting
+def create_sighting(session, data):
+    sighting = Sighting(
+        date=datetime.fromisoformat(data["date"]),
+        location=data["location"],
+        species=data["species"],
+        latin_name=SPECIES[data["species"]],  # looked up so users don't have to type it
+        source="user",
+    )
+    session.add(sighting)
+    session.commit()
+    return sighting

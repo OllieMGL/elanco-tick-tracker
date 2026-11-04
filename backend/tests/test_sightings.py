@@ -2,7 +2,7 @@ from datetime import datetime
 
 from models import Sighting
 from server import sighting_to_dict
-from sightings import search_sightings, validate_report
+from sightings import create_sighting, search_sightings, validate_report
 
 
 # saves a sighting to the test database - tests change just the fields they care about
@@ -111,3 +111,39 @@ def test_validate_report_rejects_missing_and_unknown_location_and_species():
     errors = validate_report({"location": "Atlantis", "species": "Banana tick"})
     assert errors["location"] == "Location must be one of the listed cities"
     assert errors["species"] == "Species must be one of the listed species"
+
+
+def test_create_sighting_saves_a_user_report(session):
+    create_sighting(session, {"date": "2024-06-30", "location": "Leeds", "species": "Marsh tick"})
+
+    saved = session.query(Sighting).one()
+    assert saved.location == "Leeds"
+    assert saved.latin_name == "Ixodes apronophorus"  # filled in from SPECIES
+    assert saved.source == "user"
+    assert saved.external_id is None  # only Elanco records have one
+
+
+def test_report_route_saves_a_good_report(client, session):
+    report = {"date": "2024-06-30", "location": "Leeds", "species": "Not sure"}
+
+    response = client.post("/api/sightings", json=report)
+
+    assert response.status_code == 201
+    assert response.get_json()["latin_name"] == "Unknown"
+    assert session.query(Sighting).count() == 1
+
+
+def test_report_route_returns_an_error_for_each_bad_field(client, session):
+    report = {"date": "2999-01-01", "location": "Atlantis"}  # future date, unknown city, no species
+
+    response = client.post("/api/sightings", json=report)
+
+    assert response.status_code == 400
+    assert set(response.get_json()["errors"]) == {"date", "location", "species"}
+    assert session.query(Sighting).count() == 0  # nothing saved
+
+
+def test_report_route_rejects_a_body_that_is_not_json(client):
+    response = client.post("/api/sightings", data="hello")
+
+    assert response.status_code == 400
