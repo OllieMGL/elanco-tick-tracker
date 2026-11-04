@@ -1,5 +1,23 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import Navbar from './components/Navbar'
+import LearnPage from './pages/LearnPage'
+import MapPage from './pages/MapPage'
+import ReportPage from './pages/ReportPage'
+
 function App() {
-  return <h1 className="p-4 text-3xl font-bold text-green-800">UK Tick Tracker</h1>
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<MapPage />} />
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/learn" element={<LearnPage />} />
+        </Routes>
+      </main>
+    </BrowserRouter>
+  )
 }
 
 export default App
