@@ -2,7 +2,7 @@ from datetime import datetime
 
 from models import Sighting
 from server import sighting_to_dict
-from sightings import search_sightings
+from sightings import search_sightings, validate_report
 
 
 # saves a sighting to the test database - tests change just the fields they care about
@@ -90,3 +90,24 @@ def test_sightings_route_rejects_a_bad_date(client):
 
     assert response.status_code == 400
     assert "error" in response.get_json()
+
+
+def test_validate_report_accepts_a_good_report():
+    report = {"date": "2024-06-30", "location": "London", "species": "Not sure"}
+
+    assert validate_report(report) == {}
+
+
+def test_validate_report_rejects_missing_bad_and_future_dates():
+    assert validate_report({})["date"] == "Date is required"
+    assert validate_report({"date": "banana"})["date"] == "Date must be a real date, like 2026-04-30"
+    assert validate_report({"date": "2999-01-01"})["date"] == "Date can't be in the future"
+
+
+def test_validate_report_rejects_missing_and_unknown_location_and_species():
+    assert validate_report({})["location"] == "Location is required"
+    assert validate_report({})["species"] == "Species is required"
+
+    errors = validate_report({"location": "Atlantis", "species": "Banana tick"})
+    assert errors["location"] == "Location must be one of the listed cities"
+    assert errors["species"] == "Species must be one of the listed species"
