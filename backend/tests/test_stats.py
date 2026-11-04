@@ -48,3 +48,37 @@ def test_count_by_calendar_month_combines_years(session):
     assert result[0] == {"month": "Jan", "count": 1}
     assert result[1] == {"month": "Feb", "count": 0}
     assert result[5] == {"month": "Jun", "count": 2}
+
+
+def test_regions_route_counts_per_city_with_filters(client, session):
+    add_sighting(session, location="London", date=datetime(2024, 6, 1))
+    add_sighting(session, location="Leeds", date=datetime(2020, 1, 1))  # before the start date
+
+    response = client.get("/api/stats/regions?start=2024-01-01")
+
+    assert response.status_code == 200
+    assert response.get_json() == {"London": 1}
+
+
+def test_trends_route_by_week(client, session):
+    add_sighting(session, date=datetime(2024, 6, 1))
+
+    response = client.get("/api/stats/trends?interval=week")
+
+    assert response.status_code == 200
+    assert response.get_json() == [{"period": "2024-W22", "count": 1}]
+
+
+def test_trends_route_rejects_an_unknown_interval(client):
+    response = client.get("/api/stats/trends?interval=day")
+
+    assert response.status_code == 400
+
+
+def test_seasonal_route_returns_all_12_months(client, session):
+    add_sighting(session, date=datetime(2024, 6, 1))
+
+    body = client.get("/api/stats/seasonal").get_json()
+
+    assert len(body) == 12
+    assert body[5] == {"month": "Jun", "count": 1}
