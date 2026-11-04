@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from cities import CITIES
 from db import Session
@@ -11,6 +12,7 @@ from sightings import create_sighting, search_sightings, validate_report
 from stats import count_by_calendar_month, count_by_location, count_over_time
 
 app = Flask(__name__)
+CORS(app)  # allows React to call on the API despite backend and front end running on differnt localhost ports
 
 DATE_ERROR = "start and end must be dates like 2026-11-03"
 

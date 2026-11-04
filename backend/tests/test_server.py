@@ -12,6 +12,13 @@ def test_options_route_lists_cities_and_species(client):
     assert "Not sure" in body["species"]
 
 
+def test_api_allows_requests_from_the_frontend(client):
+    response = client.get("/api/options", headers={"Origin": "http://localhost:5173"})
+
+    # the header names the frontend's address, telling the browser it's allowed to read the response
+    assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:5173"
+
+
 def test_unknown_url_returns_a_json_404(client):
     response = client.get("/api/nope")
 
