@@ -16,4 +16,3 @@ class Sighting(Base):
     species = Column(String, nullable=False)
     latin_name = Column(String, nullable=False)
     source = Column(String, nullable=False)  # "elanco" or "user"
-    image_filename = Column(String)  # only set if a user uploads a photo
