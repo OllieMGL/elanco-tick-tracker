@@ -43,6 +43,7 @@ function ReportPage() {
   const [species, setSpecies] = useState('')
 
   const [errors, setErrors] = useState({})
+  const [success, setSuccess] = useState(false)  // true once a report has been saved
 
 
   useEffect(() => {
@@ -60,11 +61,31 @@ function ReportPage() {
 
   function handleSubmit(event) {
     event.preventDefault()  // stop the browser reloading page
+    setSuccess(false)
+    setServerError(null)
 
     const formErrors = checkForm(date, location, species)
     setErrors(formErrors)
     if (Object.keys(formErrors).length > 0) return
 
+    fetch(`${import.meta.env.VITE_API_URL}/api/sightings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, location, species }),
+    })
+      .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
+      .then((result) => {
+        if (!result.ok) {
+          setErrors(result.data.errors || {})
+          return
+        }
+        // clear form if data sent back all good
+        setDate('')
+        setLocation('')
+        setSpecies('')
+        setSuccess(true)
+      })
+      .catch(() => setServerError("Can't reach the server"))
   }
 
   const warnings = getWarnings(date, species)
@@ -73,6 +94,8 @@ function ReportPage() {
     <div className="page">
       <h1 className="page-title">Report a sighting</h1>
       {serverError && <p className="server-error">{serverError}</p>}
+
+      {success && <p className="form-success" role="status">Report sent - thank you!</p>}
 
       <form className="report-form" onSubmit={handleSubmit}>
         <label>
