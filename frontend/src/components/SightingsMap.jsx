@@ -15,9 +15,9 @@ function LimitZoomToUK() {
   return null 
 }
 
-const BIGGEST_RADIUS = 25  // size of radius for the busiest city
+const BIGGEST_RADIUS = 15  // size of radius for the busiest city - bigger and nearby cities overlap
 
-// circle size for a city - the square root makes the circle's AREA match the count,
+// circle size for a city - the square root makes the circle's area match count
 function markerRadius(count, maxCount) {
   return Math.max(4, BIGGEST_RADIUS * Math.sqrt(count / maxCount))  // never smaller than 4
 }
