@@ -89,68 +89,85 @@ function LearnPage() {
     <div className="page">
       <h1 className="page-title">Learn about ticks</h1>
 
-      <h2 className="section-title">When are ticks about?</h2>
-      <p>
-        In the UK, ticks are usually most active from March to June and again from August to October.
-        The chart shows every sighting in our data counted by calendar month - this sample data is
-        spread fairly evenly across the year, so it doesn't show the real seasonal peaks.
-      </p>
+      <section className="learn-section">
+        <h2 className="section-title">When are ticks about?</h2>
+        <div className="seasonal-layout">
+          <div className="seasonal-chart">
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={months}>
+                <XAxis dataKey="month" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="count" name="Sightings" fill="#166534" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-      <label className="chart-filter">
-        City
-        <select value={city} onChange={(event) => setCity(event.target.value)}>
-          <option value="">Whole UK</option>
-          {cityList.map((name) => (
-            <option key={name} value={name}>{name}</option>
+          <div className="seasonal-info">
+            <p>
+              In the UK, ticks are usually most active from March to June and again from August to October.
+              The chart shows every sighting in our data counted by calendar month - this sample data is
+              spread fairly evenly across the year, so it doesn't show the real seasonal peaks.
+            </p>
+
+            <label className="chart-filter">
+              City
+              <select value={city} onChange={(event) => setCity(event.target.value)}>
+                <option value="">Whole UK</option>
+                {cityList.map((name) => (
+                  <option key={name} value={name}>{name}</option>
+                ))}
+              </select>
+            </label>
+
+            {error && <p className="server-error" role="alert">{error}</p>}
+          </div>
+        </div>
+      </section>
+
+      <section className="learn-section">
+        <h2 className="section-title">Species guide</h2>
+        <p>
+          Ticks are tiny and look alike, so where you found one is often the best clue to its species.
+          If you can't tell, choose "Not sure" when you report it - that's still useful.
+        </p>
+
+        <div className="species-list">
+          {SPECIES_GUIDE.map((tick) => (
+            <article key={tick.name} className="species-card">
+              <h3 className="species-name">{tick.name}</h3>
+              <p className="latin-name">{tick.latinName}</p>
+              <p><strong>Found on:</strong> {tick.foundOn}</p>
+              <p><strong>Where:</strong> {tick.habitat}</p>
+            </article>
           ))}
-        </select>
-      </label>
+        </div>
+      </section>
 
-      {error && <p className="server-error" role="alert">{error}</p>}
+      <section className="learn-section">
+        <h2 className="section-title">Prevention tips</h2>
 
-      <div className="seasonal-chart">
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={months}>
-            <XAxis dataKey="month" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Bar dataKey="count" name="Sightings" fill="#166534" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+        {/* "for you" and "for your pets" side by side */}
+        <div className="tip-columns">
+          <div>
+            <h3 className="species-name">For you</h3>
+            <ul className="tip-list">
+              {PEOPLE_TIPS.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
 
-      <h2 className="section-title">Species guide</h2>
-      <p>
-        Ticks are tiny and look alike, so where you found one is often the best clue to its species.
-        If you can't tell, choose "Not sure" when you report it - that's still useful.
-      </p>
-
-      <div className="species-list">
-        {SPECIES_GUIDE.map((tick) => (
-          <article key={tick.name} className="species-card">
-            <h3 className="species-name">{tick.name}</h3>
-            <p className="latin-name">{tick.latinName}</p>
-            <p><strong>Found on:</strong> {tick.foundOn}</p>
-            <p><strong>Where:</strong> {tick.habitat}</p>
-          </article>
-        ))}
-      </div>
-
-      <h2 className="section-title">Prevention tips</h2>
-
-      <h3 className="species-name">For you</h3>
-      <ul className="tip-list">
-        {PEOPLE_TIPS.map((tip) => (
-          <li key={tip}>{tip}</li>
-        ))}
-      </ul>
-
-      <h3 className="species-name">For your pets</h3>
-      <ul className="tip-list">
-        {PET_TIPS.map((tip) => (
-          <li key={tip}>{tip}</li>
-        ))}
-      </ul>
+          <div>
+            <h3 className="species-name">For your pets</h3>
+            <ul className="tip-list">
+              {PET_TIPS.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* a clear outline on whatever a keyboard user has tabbed to (focus-visible = keyboard only, not mouse clicks) */
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-amber-500;
 }
@@ -18,7 +17,6 @@
   @apply hover:underline;
 }
 
-/* NavLink adds the "active" class to the link for the page you're on */
 .nav-link.active {
   @apply font-semibold underline;
 }
@@ -66,13 +64,34 @@
   @apply bg-green-800 px-4 py-2 text-white;
 }
 
-/* learn page */
+/* learn page - each section is its own panel */
+.learn-section {
+  @apply mt-6 border p-6;
+}
+
 .section-title {
-  @apply mt-6 mb-2 text-xl font-bold;
+  @apply mb-3 text-xl font-bold;
+}
+
+.seasonal-layout {
+  @apply flex gap-6;
+}
+
+/* min-w-0 lets the chart shrink inside the flex row - without it the chart can't resize */
+.seasonal-chart {
+  @apply min-w-0 flex-1;
+}
+
+.seasonal-info {
+  @apply w-80;
 }
 
 .species-list {
-  @apply mt-4 grid gap-4 md:grid-cols-2;
+  @apply mt-4 grid gap-4 md:grid-cols-3;
+}
+
+.tip-columns {
+  @apply grid gap-6 md:grid-cols-2;
 }
 
 .species-card {
@@ -98,10 +117,6 @@
 
 .chart-filter select {
   @apply ml-2 border px-2 py-1;
-}
-
-.seasonal-chart {
-  @apply max-w-2xl;
 }
 
 /* map page filters - inputs need a border or Tailwind leaves them invisible */
