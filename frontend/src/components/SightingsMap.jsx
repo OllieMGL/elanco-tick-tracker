@@ -37,7 +37,7 @@ function activityLevel(count, maxCount) {
   return 'low'
 }
 
-function SightingsMap({ cities, counts }) {
+function SightingsMap({ cities, counts, onSelectCity }) {
   const maxCount = Math.max(1, ...Object.values(counts))  // the busiest city's count --> fallback 1 
 
   return (
@@ -66,6 +66,7 @@ function SightingsMap({ cities, counts }) {
               center={[lat, lng]}
               radius={markerRadius(count, maxCount)}
               pathOptions={{ color: level.colour, fillColor: level.colour, fillOpacity: 0.6 }}
+              eventHandlers={{ click: () => onSelectCity(name) }}  // tell MapPage which city was clicked
             >
               <Tooltip>{name}: {count} sightings ({level.label})</Tooltip>
             </CircleMarker>

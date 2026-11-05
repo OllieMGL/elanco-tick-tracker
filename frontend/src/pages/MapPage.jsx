@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import CitySidebar from '../components/CitySidebar'
 import SightingsMap from '../components/SightingsMap'
 
 function MapPage() {
@@ -12,6 +13,7 @@ function MapPage() {
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
 
+  const [selectedCity, setSelectedCity] = useState(null)  // the city clicked on the map, or null
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/options`)
@@ -68,7 +70,13 @@ function MapPage() {
       </div>
 
       <p>{totalSightings} sightings across {Object.keys(counts).length} cities</p>
-      <SightingsMap cities={cities} counts={counts} />
+      {/* the map and the sidebar side by side */}
+      <div className="map-layout">
+        <div className="map-column">
+          <SightingsMap cities={cities} counts={counts} onSelectCity={setSelectedCity} />
+        </div>
+        <CitySidebar city={selectedCity} onClose={() => setSelectedCity(null)} />
+      </div>
     </div>
   )
 }
