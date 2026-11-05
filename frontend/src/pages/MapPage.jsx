@@ -17,7 +17,10 @@ function MapPage() {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/options`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error()  // the backend sent an error (e.g. 400), not data
+        return response.json()
+      })
       .then((data) => {
         setCities(data.cities)
         setSpeciesList(data.species)
@@ -34,7 +37,10 @@ function MapPage() {
     if (end) filters.append('end', end)
 
     fetch(`${import.meta.env.VITE_API_URL}/api/stats/regions?${filters}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error()  // the backend sent an error (e.g. 400), not data
+        return response.json()
+      })
       .then((data) => setCounts(data))
       .catch(() => setServerError("Can't reach the server"))
   }, [species, start, end])

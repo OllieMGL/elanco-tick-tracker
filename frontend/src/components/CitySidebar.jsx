@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
+import { Bar, BarChart, Tooltip, XAxis, YAxis } from 'recharts'
 
 
 function CitySidebar({ city, species, start, end, onClose }) {
   const [sightings, setSightings] = useState([])
+  const [trend, setTrend] = useState([])  // sightings per year
   const [error, setError] = useState(null)
 
-  // load the city's sightings whenever a different city is clicked or a filter changes
   useEffect(() => {
-    if (!city) return  // nothing to load until a city is clicked
+    if (!city) return  // nothing to load until city clicked
+    setError(null) 
 
     const filters = new URLSearchParams()
     filters.append('location', city)
@@ -16,8 +18,20 @@ function CitySidebar({ city, species, start, end, onClose }) {
     if (end) filters.append('end', end)
 
     fetch(`${import.meta.env.VITE_API_URL}/api/sightings?${filters}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error()  
+        return response.json()
+      })
       .then((data) => setSightings(data))
+      .catch(() => setError("Couldn't load this city's sightings"))
+
+    // the same filters  ==.  counted per year 
+    fetch(`${import.meta.env.VITE_API_URL}/api/stats/trends?interval=year&${filters}`)
+      .then((response) => {
+        if (!response.ok) throw new Error()
+        return response.json()
+      })
+      .then((data) => setTrend(data))
       .catch(() => setError("Couldn't load this city's sightings"))
   }, [city, species, start, end])
 
@@ -43,6 +57,14 @@ function CitySidebar({ city, species, start, end, onClose }) {
       <h2 className="sidebar-title">{city}</h2>
       {error && <p className="server-error">{error}</p>}
       <p>{sightings.length} sightings</p>
+
+      <h3 className="sidebar-heading">Sightings per year</h3>
+      <BarChart width={280} height={200} data={trend}>
+        <XAxis dataKey="period" />
+        <YAxis allowDecimals={false} />
+        <Tooltip />
+        <Bar dataKey="count" name="Sightings" fill="#166534" />
+      </BarChart>
 
       <h3 className="sidebar-heading">By species</h3>
       <ul>
