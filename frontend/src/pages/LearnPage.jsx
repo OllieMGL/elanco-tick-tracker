@@ -1,4 +1,6 @@
-// the 5 species in the Elanco data - latin names match the data
+import { useEffect, useState } from 'react'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+
 const SPECIES_GUIDE = [
   {
     name: 'Fox/badger tick',
@@ -41,6 +43,7 @@ const PEOPLE_TIPS = [
   'Wash the bite and see a GP if you get a spreading rash or flu-like symptoms afterwards.',
 ]
 
+
 const PET_TIPS = [
   'Check your pet after walks, especially the head, ears, neck and between the toes.',
   'Ask your vet about tick prevention treatments.',
@@ -48,9 +51,73 @@ const PET_TIPS = [
 ]
 
 function LearnPage() {
+  const [cityList, setCityList] = useState([])
+  const [city, setCity] = useState('')
+  const [months, setMonths] = useState([])
+  const [error, setError] = useState(null)
+
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/options`)
+      .then((response) => {
+        if (!response.ok) throw new Error()
+        return response.json()
+      })
+      .then((data) => setCityList(Object.keys(data.cities)))
+      .catch(() => setError("Can't reach the server"))
+  }, [])
+
+  // reload the chart whenever different city is picked
+  useEffect(() => {
+    setError(null)
+
+    const filters = new URLSearchParams()
+    if (city) filters.append('location', city)
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/stats/seasonal?${filters}`)
+      .then((response) => {
+        if (!response.ok) throw new Error()
+        return response.json()
+      })
+      .then((data) => setMonths(data))
+      .catch(() => setError("Couldn't load the seasonal chart"))
+  }, [city])
+
+  
+
   return (
     <div className="page">
       <h1 className="page-title">Learn about ticks</h1>
+
+      <h2 className="section-title">When are ticks about?</h2>
+      <p>
+        In the UK, ticks are usually most active from March to June and again from August to October.
+        The chart shows every sighting in our data counted by calendar month - this sample data is
+        spread fairly evenly across the year, so it doesn't show the real seasonal peaks.
+      </p>
+
+      <label className="chart-filter">
+        City
+        <select value={city} onChange={(event) => setCity(event.target.value)}>
+          <option value="">Whole UK</option>
+          {cityList.map((name) => (
+            <option key={name} value={name}>{name}</option>
+          ))}
+        </select>
+      </label>
+
+      {error && <p className="server-error">{error}</p>}
+
+      <div className="seasonal-chart">
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={months}>
+            <XAxis dataKey="month" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Bar dataKey="count" name="Sightings" fill="#166534" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <h2 className="section-title">Species guide</h2>
       <p>
