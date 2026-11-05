@@ -75,7 +75,13 @@ function MapPage() {
         <div className="map-column">
           <SightingsMap cities={cities} counts={counts} onSelectCity={setSelectedCity} />
         </div>
-        <CitySidebar city={selectedCity} onClose={() => setSelectedCity(null)} />
+        <CitySidebar
+          city={selectedCity}
+          species={species}
+          start={start}
+          end={end}
+          onClose={() => setSelectedCity(null)}
+        />
       </div>
     </div>
   )

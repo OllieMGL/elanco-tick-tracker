@@ -58,6 +58,10 @@
   @apply text-xl font-bold;
 }
 
+.sidebar-heading {
+  @apply mt-4 font-semibold;
+}
+
 .close-button {
   @apply float-right underline;
 }
