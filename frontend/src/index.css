@@ -61,6 +61,32 @@
   @apply bg-green-800 px-4 py-2 text-white;
 }
 
+/* learn page */
+.section-title {
+  @apply mt-6 mb-2 text-xl font-bold;
+}
+
+.species-list {
+  @apply mt-4 grid gap-4 md:grid-cols-2;
+}
+
+.species-card {
+  @apply border p-4;
+}
+
+.species-name {
+  @apply font-semibold;
+}
+
+.latin-name {
+  @apply mb-2 italic;
+}
+
+/* Tailwind removes list bullets by default, so add them back */
+.tip-list {
+  @apply mb-4 list-disc pl-6;
+}
+
 /* map page filters - inputs need a border or Tailwind leaves them invisible */
 .map-filters {
   @apply my-4 flex gap-6;
