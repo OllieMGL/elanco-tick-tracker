@@ -93,7 +93,7 @@ function ReportPage() {
   return (
     <div className="page">
       <h1 className="page-title">Report a sighting</h1>
-      {serverError && <p className="server-error">{serverError}</p>}
+      {serverError && <p className="server-error" role="alert">{serverError}</p>}
 
       {success && <p className="form-success" role="status">Report sent - thank you!</p>}
 
@@ -101,7 +101,7 @@ function ReportPage() {
         <label>
           Date of sighting
           <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
-          {errors.date && <span className="field-error">{errors.date}</span>}
+          {errors.date && <span className="field-error" role="alert">{errors.date}</span>}
         </label>
 
         <label>
@@ -112,7 +112,7 @@ function ReportPage() {
               <option key={name} value={name}>{name}</option>
             ))}
           </select>
-          {errors.location && <span className="field-error">{errors.location}</span>}
+          {errors.location && <span className="field-error" role="alert">{errors.location}</span>}
         </label>
 
         <label>
@@ -123,7 +123,7 @@ function ReportPage() {
               <option key={name} value={name}>{name}</option>
             ))}
           </select>
-          {errors.species && <span className="field-error">{errors.species}</span>}
+          {errors.species && <span className="field-error" role="alert">{errors.species}</span>}
         </label>
 
         {warnings.map((warning) => (

@@ -51,7 +51,7 @@ function MapPage() {
   return (
     <div className="page">
       <h1 className="page-title">Tick sightings map</h1>
-      {serverError && <p className="server-error">{serverError}</p>}
+      {serverError && <p className="server-error" role="alert">{serverError}</p>}
 
       <div className="map-filters">
         <label>

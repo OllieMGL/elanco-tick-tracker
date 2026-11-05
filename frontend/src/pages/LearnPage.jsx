@@ -106,7 +106,7 @@ function LearnPage() {
         </select>
       </label>
 
-      {error && <p className="server-error">{error}</p>}
+      {error && <p className="server-error" role="alert">{error}</p>}
 
       <div className="seasonal-chart">
         <ResponsiveContainer width="100%" height={250}>

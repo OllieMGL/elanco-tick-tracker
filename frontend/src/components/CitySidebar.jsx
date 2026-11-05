@@ -55,7 +55,7 @@ function CitySidebar({ city, species, start, end, onClose }) {
     <aside className="city-sidebar">
       <button className="close-button" onClick={onClose}>Close</button>
       <h2 className="sidebar-title">{city}</h2>
-      {error && <p className="server-error">{error}</p>}
+      {error && <p className="server-error" role="alert">{error}</p>}
       <p>{sightings.length} sightings</p>
 
       <h3 className="sidebar-heading">Sightings per year</h3>

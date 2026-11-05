@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* a clear outline on whatever a keyboard user has tabbed to (focus-visible = keyboard only, not mouse clicks) */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-amber-500;
+}
+
 /* navbar */
 .navbar {
   @apply flex items-center gap-6 bg-green-800 px-6 py-3 text-white;
