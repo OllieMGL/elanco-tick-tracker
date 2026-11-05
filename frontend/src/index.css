@@ -1,24 +1,37 @@
 @import "tailwindcss";
 
+/* colour scheme: green navbar, warm stone background, white cards, amber accents */
+body {
+  @apply bg-stone-100 text-stone-800;
+}
+
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-amber-500;
 }
 
+/* shared card look - white, rounded, a soft shadow so it stands out from the background */
+.learn-section,
+.city-sidebar,
+.report-form,
+.map-filters {
+  @apply rounded-lg border border-stone-200 bg-white shadow-sm;
+}
+
 /* navbar */
 .navbar {
-  @apply flex items-center gap-6 bg-green-800 px-6 py-3 text-white;
+  @apply flex items-center gap-6 bg-green-800 px-6 py-3 text-green-50 shadow;
 }
 
 .navbar-title {
-  @apply text-lg font-bold;
+  @apply text-lg font-bold text-white;
 }
 
 .nav-link {
-  @apply hover:underline;
+  @apply border-b-2 border-transparent hover:text-amber-300;
 }
 
 .nav-link.active {
-  @apply font-semibold underline;
+  @apply border-amber-400 font-semibold text-amber-300;
 }
 
 /* every page */
@@ -27,50 +40,51 @@
 }
 
 .page-title {
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold text-green-900;
 }
 
 .server-error {
   @apply text-red-600;
 }
 
+/* every input and dropdown */
+select,
+input {
+  @apply rounded border border-stone-300 bg-white px-2 py-1;
+}
+
 /* report page form - one field per row */
 .report-form {
-  @apply flex max-w-md flex-col gap-4;
+  @apply mt-4 flex max-w-md flex-col gap-4 p-6;
 }
 
 .report-form label {
-  @apply flex flex-col gap-1;
-}
-
-.report-form select,
-.report-form input {
-  @apply border px-2 py-1;
+  @apply flex flex-col gap-1 font-medium;
 }
 
 .field-error {
-  @apply text-sm text-red-600;
+  @apply text-sm font-normal text-red-600;
 }
 
 .form-warning {
-  @apply text-amber-700;
+  @apply rounded bg-amber-50 p-2 text-amber-800;
 }
 
 .form-success {
-  @apply mb-4 font-semibold text-green-700;
+  @apply mt-4 max-w-md rounded border border-green-600 bg-green-50 p-3 font-semibold text-green-800;
 }
 
 .primary-button {
-  @apply bg-green-800 px-4 py-2 text-white;
+  @apply rounded bg-amber-500 px-4 py-2 font-semibold text-stone-900 hover:bg-amber-600;
 }
 
 /* learn page - each section is its own panel */
 .learn-section {
-  @apply mt-6 border p-6;
+  @apply mt-6 p-6;
 }
 
 .section-title {
-  @apply mb-3 text-xl font-bold;
+  @apply mb-3 text-xl font-bold text-green-900;
 }
 
 .seasonal-layout {
@@ -94,21 +108,22 @@
   @apply grid gap-6 md:grid-cols-2;
 }
 
+/* an amber stripe down the left of each species card */
 .species-card {
-  @apply border p-4;
+  @apply rounded border-l-4 border-amber-400 bg-stone-50 p-4;
 }
 
 .species-name {
-  @apply font-semibold;
+  @apply font-semibold text-green-800;
 }
 
 .latin-name {
-  @apply mb-2 italic;
+  @apply mb-2 text-stone-500 italic;
 }
 
 /* Tailwind removes list bullets by default, so add them back */
 .tip-list {
-  @apply mb-4 list-disc pl-6;
+  @apply mb-4 list-disc pl-6 marker:text-amber-500;
 }
 
 .chart-filter {
@@ -116,17 +131,17 @@
 }
 
 .chart-filter select {
-  @apply ml-2 border px-2 py-1;
+  @apply ml-2;
 }
 
-/* map page filters - inputs need a border or Tailwind leaves them invisible */
+/* map page filters */
 .map-filters {
-  @apply my-4 flex gap-6;
+  @apply my-4 flex gap-6 p-3;
 }
 
 .map-filters select,
 .map-filters input {
-  @apply ml-2 border px-2 py-1;
+  @apply ml-2;
 }
 
 /* map page layout - the map takes the space left over, the sidebar has a fixed width */
@@ -139,24 +154,24 @@
 }
 
 .city-sidebar {
-  @apply w-80 border p-4;
+  @apply w-80 p-4;
 }
 
 .sidebar-title {
-  @apply text-xl font-bold;
+  @apply text-xl font-bold text-green-900;
 }
 
 .sidebar-heading {
-  @apply mt-4 font-semibold;
+  @apply mt-4 font-semibold text-green-800;
 }
 
 .close-button {
-  @apply float-right underline;
+  @apply float-right text-green-800 underline hover:text-amber-600;
 }
 
 /* map page - the map needs a height or it won't show at all */
 .sightings-map {
-  @apply h-[70vh] w-full;
+  @apply h-[70vh] w-full rounded-lg shadow-sm;
 }
 
 .map-key {
