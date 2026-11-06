@@ -1,5 +1,7 @@
 # Oliver Garvin Elanco Submission - Full Stack UK Tick Tracker
 
+link to video walkthrough - https://youtu.be/sgA_bzXC-Ws
+
 A web app for tracking tick sightings across the UK. See tick sightings on an interactive map, see how activity in each city has changed over time, report your own sighting, and learn how to identify ticks and avoid bites.
 
 Built with React, Flask, Tailwind CSS, Leaflet, Recharts and SQLite, using sighting data from the Elanco tick sightings API.
